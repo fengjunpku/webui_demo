@@ -67,13 +67,15 @@ class run:
     timestr = time.strftime('%Y-%m-%d %H:%M:%S',timestruc)
     if sysstr == "Windows":
       return timestr+'<br>'+sysstr+'<br>Please use in Linux'
-    else:
+    elif sysstr == "Linux":
       (statuscode, output) = commands.getstatusoutput(commandname)
       if statuscode == 0:
         status = '[Sucessed to Run CMD]: '+ str(commandname)
       else:
         status = '[Failed to Run CMD]: '+ str(commandname)
         return timestr+'<br>'+sysstr+'<br>'+str(status)+'<br>'+output+'<br>'
+    else:
+      return timestr+'<br>'+sysstr+'<br>Please use in Linux'
 
 if __name__=="__main__":
   web.internalerror = web.debugerror
