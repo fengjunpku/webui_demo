@@ -1,7 +1,9 @@
 #!/bin/python
+#coding=utf-8
 import web
 import time
 import commands
+import platform
 from web import form
 
 # resource & template
@@ -13,7 +15,9 @@ urls = (
   '/load','load',
   '/run','run'
 )
-
+#system name
+sysstr = platform.system()
+#
 myform = form.Form( 
   form.Textbox("boe"), 
   form.Textbox("bax", 
@@ -58,15 +62,18 @@ class run:
     return 'REJECTION'
   def POST(self):
     commandname = web.input().get('cmd')
-    (statuscode, output) = commands.getstatusoutput(commandname)
-    if statuscode == 0:
-      status = '[Sucessed to Run CMD]: '+ str(commandname)
-    else:
-      status = '[Failed to Run CMD]'
     timeflag = time.time()
     timestruc = time.localtime(timeflag)
     timestr = time.strftime('%Y-%m-%d %H:%M:%S',timestruc)
-    return timestr+'<br>'+str(status)+'<br>'+output+'<br>'
+    if sysstr == "Windows":
+      return timestr+'<br>'+sysstr+'<br>Please use in Linux'
+    else:
+      (statuscode, output) = commands.getstatusoutput(commandname)
+      if statuscode == 0:
+        status = '[Sucessed to Run CMD]: '+ str(commandname)
+      else:
+        status = '[Failed to Run CMD]: '+ str(commandname)
+        return timestr+'<br>'+sysstr+'<br>'+str(status)+'<br>'+output+'<br>'
 
 if __name__=="__main__":
   web.internalerror = web.debugerror
